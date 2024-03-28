@@ -47,4 +47,10 @@ public class GlobalExceptionHandler {
         logger.error("Base fee not found exception occurred", e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ExtraFeeNotFoundException.class)
+    public ResponseEntity<String> handleExtraFeeNotFoundException(ExtraFeeNotFoundException e) {
+        logger.error("Extra fee not found exception occurred", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

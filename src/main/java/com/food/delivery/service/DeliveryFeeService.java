@@ -38,6 +38,12 @@ public class DeliveryFeeService {
      * @throws IllegalArgumentException If the city, vehicle type, or weather data is not found.
      */
     public String calculateDeliveryFee(String cityName, String vehicleTypeName, LocalDateTime dateTime) {
+        cityName = cityName.toLowerCase();
+        cityName = Character.toUpperCase(cityName.charAt(0)) + cityName.substring(1);
+
+        vehicleTypeName = vehicleTypeName.toLowerCase();
+        vehicleTypeName = Character.toUpperCase(vehicleTypeName.charAt(0)) + vehicleTypeName.substring(1);
+
         Weather weather;
         City city = cityRepository.findByName(cityName)
                 .orElseThrow(() -> new CityNotFoundException("City not found"));

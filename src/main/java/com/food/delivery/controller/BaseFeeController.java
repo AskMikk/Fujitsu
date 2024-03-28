@@ -1,83 +1,94 @@
 package com.food.delivery.controller;
 
 import com.food.delivery.entity.DeliveryBaseFee;
+import com.food.delivery.model.FeeUpdateRequest;
 import com.food.delivery.service.BaseFeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/base-fee")
 @RequiredArgsConstructor
+@Tag(name = "BaseFee", description = "API for base fee operations.")
 public class BaseFeeController {
 
-    private final BaseFeeService deliveryBaseFeeService;
+    private final BaseFeeService baseFeeService;
 
-    /**
-     * API endpoint to create a new delivery base fee.
-     * @param deliveryBaseFee The delivery base fee to be created.
-     * @return The created delivery base fee.
-     */
     @PostMapping
+    @Operation(summary = "Create New Delivery Base Fee",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Delivery Base Fee successfully created.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = DeliveryBaseFee.class)))
+            })
     public DeliveryBaseFee createBaseFee(@Valid @RequestBody DeliveryBaseFee deliveryBaseFee) {
-        return deliveryBaseFeeService.createBaseFee(deliveryBaseFee);
+        return baseFeeService.createBaseFee(deliveryBaseFee);
     }
 
-    /**
-     * API endpoint to retrieve a delivery base fee by ID.
-     * @param id The ID of the delivery base fee to retrieve.
-     * @return The found delivery base fee.
-     */
     @GetMapping("/{id}")
+    @Operation(summary = "Retrieve Delivery Base Fee by ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Delivery Base Fee found.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = DeliveryBaseFee.class)))
+            })
     public DeliveryBaseFee getBaseFee(@PathVariable Integer id) {
-        return deliveryBaseFeeService.getBaseFeeById(id);
+        return baseFeeService.getBaseFeeById(id);
     }
 
-    /**
-     * API endpoint to update an existing delivery base fee.
-     * @param id The ID of the delivery base fee to update.
-     * @param deliveryBaseFee The new delivery base fee details.
-     * @return The updated delivery base fee.
-     */
     @PutMapping("/{id}")
+    @Operation(summary = "Update Existing Delivery Base Fee",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Delivery Base Fee successfully updated.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = DeliveryBaseFee.class)))
+            })
     public DeliveryBaseFee updateBaseFee(@PathVariable Integer id, @RequestBody DeliveryBaseFee deliveryBaseFee) {
-        return deliveryBaseFeeService.updateBaseFee(id, deliveryBaseFee);
+        return baseFeeService.updateBaseFee(id, deliveryBaseFee);
     }
 
-    /**
-     * API endpoint to delete a delivery base fee by ID.
-     * @param id The ID of the delivery base fee to delete.
-     */
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete Delivery Base Fee by ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Delivery Base Fee successfully deleted.")
+            })
     public void deleteBaseFee(@PathVariable Integer id) {
-        deliveryBaseFeeService.deleteBaseFee(id);
+        baseFeeService.deleteBaseFee(id);
     }
 
-    /**
-     * API endpoint to list all delivery base fees.
-     * @return The list of all delivery base fees.
-     */
     @GetMapping
+    @Operation(summary = "List All Delivery Base Fees",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of all Delivery Base Fees.",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = DeliveryBaseFee.class))))
+            })
     public List<DeliveryBaseFee> listBaseFees() {
-        return deliveryBaseFeeService.listBaseFees();
+        return baseFeeService.listBaseFees();
     }
 
-    /**
-     * API endpoint to update only the fee amount of a delivery base fee.
-     * @param id The ID of the delivery base fee to update.
-     * @param feeUpdate Map containing the new fee amount.
-     * @return The updated delivery base fee or null if fee is not provided.
-     */
     @PatchMapping("/{id}/update-fee")
-    public DeliveryBaseFee updateBaseFeeAmount(@PathVariable Integer id, @RequestBody Map<String, BigDecimal> feeUpdate) {
-        BigDecimal newFee = feeUpdate.get("fee");
+    @Operation(summary = "Updates only the fee amount of a Delivery Base Fee entity by its ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Delivery Base Fee amount successfully updated.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = DeliveryBaseFee.class)))
+            })
+    public DeliveryBaseFee updateBaseFeeAmount(@PathVariable Integer id, @Valid @RequestBody FeeUpdateRequest feeUpdateRequest) {
+        BigDecimal newFee = feeUpdateRequest.getFee();
         if (newFee == null) {
             throw new IllegalArgumentException("Fee amount must be provided.");
         }
-        return deliveryBaseFeeService.updateBaseFeeAmount(id, newFee);
+        return baseFeeService.updateBaseFeeAmount(id, newFee);
     }
 }

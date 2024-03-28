@@ -1,80 +1,91 @@
 package com.food.delivery.controller;
 
 import com.food.delivery.entity.ExtraFee;
+import com.food.delivery.model.FeeUpdateRequest;
 import com.food.delivery.service.ExtraFeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/extra-fee")
 @RequiredArgsConstructor
+@Tag(name = "ExtraFee", description = "API for managing extra fees.")
 public class ExtraFeeController {
 
     private final ExtraFeeService extraFeeService;
 
-    /**
-     * API endpoint to create a new Extra Fee.
-     * @param extraFee The Extra Fee entity to be created.
-     * @return The created Extra Fee entity.
-     */
     @PostMapping
+    @Operation(summary = "Create New Extra Fee",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Extra Fee successfully created.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExtraFee.class)))
+            })
     public ExtraFee createExtraFee(@Valid @RequestBody ExtraFee extraFee) {
         return extraFeeService.createExtraFee(extraFee);
     }
 
-    /**
-     * API endpoint to retrieve an Extra Fee by ID.
-     * @param id The ID of the Extra Fee to retrieve.
-     * @return The found Extra Fee entity.
-     */
     @GetMapping("/{id}")
+    @Operation(summary = "Retrieve Extra Fee by ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Extra Fee found.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExtraFee.class)))
+            })
     public ExtraFee getExtraFee(@PathVariable Integer id) {
         return extraFeeService.getExtraFeeById(id);
     }
 
-    /**
-     * API endpoint to update an existing Extra Fee.
-     * @param id The ID of the Extra Fee to update.
-     * @param extraFee The new Extra Fee details.
-     * @return The updated Extra Fee entity.
-     */
     @PutMapping("/{id}")
+    @Operation(summary = "Update Existing Extra Fee",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Extra Fee successfully updated.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExtraFee.class)))
+            })
     public ExtraFee updateExtraFee(@PathVariable Integer id, @RequestBody ExtraFee extraFee) {
         return extraFeeService.updateExtraFee(id, extraFee);
     }
 
-    /**
-     * API endpoint to delete an Extra Fee by ID.
-     * @param id The ID of the Extra Fee to delete.
-     */
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete Extra Fee by ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Extra Fee successfully deleted.")
+            })
     public void deleteExtraFee(@PathVariable Integer id) {
         extraFeeService.deleteExtraFee(id);
     }
 
-    /**
-     * API endpoint to list all Extra Fees.
-     * @return The list of all Extra Fee entities.
-     */
     @GetMapping
+    @Operation(summary = "List All Extra Fees",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of all Extra Fees.",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = ExtraFee.class))))
+            })
     public List<ExtraFee> listExtraFees() {
         return extraFeeService.listExtraFees();
     }
 
-    /**
-     * API endpoint to update only the fee amount of an Extra Fee.
-     * @param id The ID of the Extra Fee to update.
-     * @param feeUpdate Map containing the new fee amount.
-     * @return The updated Extra Fee, or throw IllegalArgumentException if fee is not provided.
-     */
     @PatchMapping("/{id}/update-fee")
-    public ExtraFee updateExtraFeeAmount(@PathVariable Integer id, @RequestBody Map<String, BigDecimal> feeUpdate) {
-        BigDecimal newFee = feeUpdate.get("fee");
+    @Operation(summary = "Updates only the fee amount of an Extra Fee entity by its ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Extra Fee amount successfully updated.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExtraFee.class)))
+            })
+    public ExtraFee updateExtraFeeAmount(@PathVariable Integer id, @Valid @RequestBody FeeUpdateRequest feeUpdateRequest) {
+        BigDecimal newFee = feeUpdateRequest.getFee();
         if (newFee == null) {
             throw new IllegalArgumentException("Fee amount must be provided.");
         }

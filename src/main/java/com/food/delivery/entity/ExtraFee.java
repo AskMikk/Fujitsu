@@ -25,10 +25,8 @@ public class ExtraFee {
     @NotNull(message = "Condition type is required")
     private ConditionType conditionType;
 
-    @Column(nullable = true)
     private Double conditionMin;
 
-    @Column(nullable = true)
     private Double conditionMax;
 
     @ManyToOne
@@ -36,7 +34,6 @@ public class ExtraFee {
     @NotNull(message = "Vehicle type is required")
     private VehicleType vehicleType;
 
-    @Column(nullable = true)
     private BigDecimal fee;
 
     @ManyToOne
