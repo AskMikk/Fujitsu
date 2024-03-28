@@ -10,4 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface WeatherRepository extends JpaRepository<Weather, Long> {
+    Weather findTopByCityOrderByTimestampDesc(City stationName);
+
+    Optional<Weather> findTopByCityAndTimestampBeforeOrderByTimestampDesc(City cityName, LocalDateTime dateTime);
 }

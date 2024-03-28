@@ -55,8 +55,8 @@ INSERT INTO delivery_base_fees (city_id, vehicle_type_id, fee) VALUES
 (3, 3, 2.00); -- Pärnu, Bike
 
 INSERT INTO extra_fees (condition_type_id, condition_min, condition_max, vehicle_type_id, fee) VALUES
-(1, NULL, -10.00, 2, 1.00), -- Scooter, < -10°C
-(1, NULL, -10.00, 3, 1.00), -- Bike, < -10°C
+(1, NULL, -10.01, 2, 1.00), -- Scooter, < -10°C
+(1, NULL, -10.01, 3, 1.00), -- Bike, < -10°C
 (1, -10.00, 0.00, 2, 0.50),    -- Scooter, -10°C to 0°C
 (1, -10.00, 0.00, 3, 0.50);    -- Bike, -10°C to 0°C
 
