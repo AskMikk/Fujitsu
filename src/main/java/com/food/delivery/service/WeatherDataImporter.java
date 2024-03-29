@@ -40,10 +40,7 @@ public class WeatherDataImporter {
      */
     @Scheduled(cron = "0 15 * * * ?")
     public void storeWeatherData() {
-        System.out.println("hello");
         List<WeatherStation> stations = fetchWeatherStations();
-        System.out.println(stations);
-
         stations.stream()
                 .filter(station -> Arrays.asList("Tallinn-Harku", "Tartu-Tõravere", "Pärnu").contains(station.getName()))
                 .map(this::stationToWeather)

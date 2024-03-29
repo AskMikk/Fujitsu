@@ -50,7 +50,7 @@ public class DeliveryFeeServiceTest {
         weather.setWindSpeed(5.0);
         weather.setWeatherPhenomenon(null);
 
-        when(cityRepository.findByName("TestCity")).thenReturn(Optional.of(city));
+        when(cityRepository.findByName("Test")).thenReturn(Optional.of(city));
         when(vehicleTypeRepository.findByType("Car")).thenReturn(Optional.of(vehicleType));
         when(weatherRepository.findTopByCityAndTimestampBeforeOrderByTimestampDesc(any(City.class), any(LocalDateTime.class)))
                 .thenReturn(Optional.of(weather));
@@ -66,7 +66,7 @@ public class DeliveryFeeServiceTest {
 
     @Test
     void calculateDeliveryFee_ShouldReturnCorrectFee_WhenParametersAreValid() {
-        String result = deliveryFeeService.calculateDeliveryFee("TestCity", "Car", dateTime);
+        String result = deliveryFeeService.calculateDeliveryFee("Test", "Car", dateTime);
 
         assertNotNull(result);
         assertTrue(result.contains("="));
